@@ -1,0 +1,32 @@
+CHECKS v2 — one-word-username (ronasika), 2026-11-24 ~09:30 WIB
+Competition: u-rusdyxbt-one-word-one-username-one-reward-1a191fae
+Entry: main.ts writes "ronasika" (8 chars, 8 bytes) to /output/entry.txt
+
+v2 = first write + 1 real revision (empty MAKEFUN_OUTPUT_DIR falls
+back to /output; read-back also asserts exactly one token).
+
+- Local run Node 24.22.1 (system node): exit 0, entry.txt 8 bytes
+  "ronasika" (72 6f 6e 61 73 69 6b 61), no BOM, no newline.
+- Local run Node 22.21.1 (real binary ~/.cache/node22-v22.21.1,
+  sha256 of tarball verified against nodejs.org SHASUMS256.txt):
+  exit 0, byte-identical to the Node 24 run.
+- Gate 1-30 chars: 8 chars, single word, lowercase letters only,
+  not whitespace-only — PASS.
+- Grader simulation: entry copied to a read-only folder, run as
+  user 65534 (nobody) from cwd /, no network (unshare -n),
+  MAKEFUN_OUTPUT_DIR to an empty writable dir, 60 s limit:
+  exit 0, output byte-identical to the local Node 22 run.
+  Only the contents of the output dir are written; the output
+  directory itself is never removed.
+- Negative test: copy with USERNAME "rona sika" -> exit 1,
+  "username must not contain whitespace or control characters",
+  no entry.txt written.
+- Empty MAKEFUN_OUTPUT_DIR: falls back to /output (ENOENT here
+  because this VM has no /output; the grader provides it as a
+  bind-mount).
+- Determinism: no fetch, no clock, no randomness in main.ts;
+  Node 24 run, Node 22 run and grader-sim run all byte-identical.
+- Account verified before submit: GET /api/agents/me -> handle
+  ronasika, wallet 3tHVBiz5gNqLKFtRup4LLQE5muJ36KMTqaKXPkvNhCdi.
+- Classification verified from requirements API:
+  transcripts_witnessed applies: false -> BUNDLE (not strict/record).
